@@ -261,9 +261,14 @@ multitask :push do
     message = "Site updated at #{Time.now.utc}"
     system "git commit -m \"#{message}\""
     puts "\n## Pushing generated #{deploy_dir} website"
-    system "git push origin #{deploy_branch}"
+    system "git push origin #{deploy_branch} --force"
     puts "\n## Github Pages deploy complete"
   end
+end
+
+desc "deploy blog to heroku"
+multitask :heroku do
+  puts "## Deploying branch to Heroku "
 end
 
 desc "Update configurations to support publishing to root or sub directory"
@@ -308,15 +313,9 @@ task :setup_github_pages, :repo do |t, args|
   else
     puts "Enter the read/write url for your repository"
     puts "(For example, 'git@github.com:your_username/your_username.github.io)"
-    puts "           or 'https://github.com/your_username/your_username.github.io')"
     repo_url = get_stdin("Repository url: ")
   end
-  protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
-  if protocol == 'git'
-    user = repo_url.match(/:([^\/]+)/)[1]
-  else
-    user = repo_url.match(/github\.com\/([^\/]+)/)[1]
-  end
+  user = repo_url.match(/:([^\/]+)/)[1]
   branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
   project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
   unless (`git remote -v` =~ /origin.+?octopress(?:\.git)?/).nil?

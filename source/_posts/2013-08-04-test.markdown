@@ -1,0 +1,9 @@
+---
+layout: post
+title: "о наболевшем"
+date: 2013-08-04 02:36
+comments: true
+categories: ruby, test, whatever, blog 
+---
+
+> Однажды в студеную зимнюю пору
