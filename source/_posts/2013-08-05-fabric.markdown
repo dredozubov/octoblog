@@ -1,0 +1,67 @@
+---
+layout: post
+title: "Деплоймент python-проектов с помощью fabric"
+date: 2013-08-05 02:15
+comments: true
+categories: python, deployment, django
+---
+Не секрет, что выкатка кода на боевые или тестовые сервера зачастую бывает куда проблематичнее, чем мы сами того ожидаем. Ведь все программисты по сути своей полны оптимизма, об это говорил еще [Фредерик Брукс](http://ru.wikipedia.org/wiki/%D0%91%D1%80%D1%83%D0%BA%D1%81,_%D0%A4%D1%80%D0%B5%D0%B4%D0%B5%D1%80%D0%B8%D0%BA) в своем "Мифическом человеко-месяце" десятилетия назад.
+
+<!--more-->
+
+Делать это руками - занятие неблагодарное и муторное, слишком большой простор для ошибок. Автоматизация процесса - явление естественное. Есть солидные и проверенные временем решения для продакшен-систем: сборка пакетов и последующая раскатка продукта из них или скрипты, которые берут на себя львиную долю работы. По роду работы с небольшими проектами меня всегда прельщал второй способ, но вид .sh-скриптов всегда был способен вогнать меня в уныние. 
+Видимо, создатели [fabric](http://docs.fabfile.org/en/1.4.3/) сделали его именно для меня. fabric - инструмент, вызывающий у меня ассоциации прежде всего с rake из мира ruby. Эдакий шелл-скрипт для людей.
+
+В итоге проект на django деплоится у меня теперь по ходовому рецепту:
+
+1. код коммитится в git
+   
+2. пуллится из гита на нужной машине
+   
+3. код копируется rsync'ом в нужную директорию
+   
+4. в виртуальное окружение ставятся новые зависимости
+   
+5. собирается статика через collectstatic
+   
+6. выполняются миграции, если есть(на самом деле предпочитаю это делать руками, с south бывает случаются и неприятности)
+   
+7. рестарт uwsgi и nginx
+   
+
+Пункты начиная со второго выполняются одним скриптом для fabric, править и поддерживать который, куда приятнее чем .sh-скрипт. Простенький шаблон такого скрипта для webfaction выглядит у меня так:
+
+    from fabric.api import *  # NOQA
+    from fabsettings import (PROJECTNAME, APPNAME, REMOTE, USER, HOMEDIR,
+                            CODEDIR, VIRTUALENV)
+
+    env.projectname = PROJECTNAME
+    env.appname = APPNAME
+    env.remote = REMOTE
+    env.user = USER
+    env.home = HOMEDIR
+    env.codedir = CODEDIR
+    env.venv = VIRTUALENV
+
+
+    def deploy(branch='master'):
+        local('git pull %s %s' % (env.remote, branch))
+        checkout(branch, 'rsync -auv * %s' % env.codedir)
+
+        with lcd(env.codedir):
+            virtualenv('pip install -r requirements/production.txt')
+            virtualenv('./manage.py collectstatic')
+        local('%s/webapps/%s/bin/restart' % (env.home, env.projectname))
+
+
+    def virtualenv(command):
+        local('pwd && source %sbin/activate && %s' % (env.venv, command))
+
+
+    def checkout(branch, command):
+        local('git checkout %s && %s' % (branch, command))
+
+
+Настройки для проекта лежат в отдельном файле - fabsettings.py.
+
+[репозиторий на github](https://github.com/dredozubov/webfaction-django-fabric)
