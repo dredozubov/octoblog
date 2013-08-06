@@ -9,7 +9,7 @@ ssh_port       = "22"
 document_root  = "~/website.com/"
 rsync_delete   = false
 rsync_args     = ""  # Any extra arguments to pass to rsync
-deploy_default = "rsync"
+deploy_default = "heroku"
 
 # This will be configured for you when you run config_deploy
 deploy_branch  = "gh-pages"
@@ -267,8 +267,12 @@ multitask :push do
 end
 
 desc "deploy blog to heroku"
-multitask :heroku do
+multitask :heroku, :branch do |t, args|
   puts "## Deploying branch to Heroku "
+  branch = args.branch || 'master'
+  puts "\n##Pushing to heroku"
+  system "git push heroku #{branch}"
+  puts "\nHeroku deploy complete!"
 end
 
 desc "Update configurations to support publishing to root or sub directory"
