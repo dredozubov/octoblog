@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "О чудесах битовых строк и битовой магии"
-date: 2013-08-06 21:45
+date: 2013-05-06 21:45
 comments: true
 categories: алгоритмы с python tsp
 ---

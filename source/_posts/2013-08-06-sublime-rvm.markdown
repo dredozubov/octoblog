@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Sublime с нормальной поддержкой rvm"
-date: 2013-08-06 21:25
+date: 2013-05-08 21:25
 comments: true
 categories: ruby sublime rvm
 ---
