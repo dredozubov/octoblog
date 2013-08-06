@@ -1,15 +1,16 @@
 ---
 layout: post
 title: "Сон: фазы сна, сколько нужно спать"
-date: 2013-08-04 14:31
+date: 2012-12-20 20:37
 comments: true
 categories: lifestyle, interesting
-keywords: sleep, interesting, sleep debt, 
+keywords: сон интересно lifestyle продуктивность
 ---
 
 
 
-![Обложка](../images/sleep-debt/sleep_promiseofsleep.jpg)
+<!--![Обложка](../images/sleep-debt/sleep_promiseofsleep.jpg)
+-->{% img /images/sleep-debt/sleep_promiseofsleep.jpg %}
 
 
 Однажды я купил на [амазоне](http://www.amazon.com/Promise-Sleep-Medicine-Connection-Happiness/dp/0440509017) книжку под названием "The Promise Of Sleep", профессора Dement'а(отличная фамилия, да) [^1], который посвятил свою жизнь изучению сна и на старости лет оформил это в виде научпопа. Следует сказать что проблемы со сном мне не совсем чужды - иногда я засиживаюсь допоздна и не могу засыпать после этого вовремя какое-то время, так что пролить луч света на хотя бы приблизительную науку процессов, связанных со сном, мне всегда хотелось.
@@ -35,7 +36,8 @@ keywords: sleep, interesting, sleep debt,
 Многие из нас знают что не всю продолжительность сна - сон равноценен. С помощью [электроэнцефалограммы](http://ru.wikipedia.org/wiki/%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D1%8D%D0%BD%D1%86%D0%B5%D1%84%D0%B0%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F) удалось выделить пять фаз медленного сна и переходы в быстрый, разделяя их по функциональному состоянию мозга на каждый из моментов. 
 
 
-![Фазы сна в течение ночи](../images/sleep-debt/sleep_sleepstages.jpg)
+<!--![Фазы сна в течение ночи](../images/sleep-debt/sleep_sleepstages.jpg)-->
+{% img /images/sleep-debt/sleep_sleepstages.jpg %}
 
 
 Фаза нулевая
