@@ -1,0 +1,83 @@
+---
+layout: post
+title: "О чудесах битовых строк и битовой магии"
+date: 2013-08-06 21:45
+comments: true
+categories: алгоритмы с python tsp
+---
+Не так давно, я реализовывал dynamic programming алгоритм для решения задачи коммивояжера(25-29 городов). От решения на Python мне пришлось отказаться - скрипт очень долго. Вместо долгой оптимизации тут же я решил вспоминь забытый C и накидать решение на нём. 
+
+<!--more-->
+
+Для этого алгоритма битовые строки просто палочка выручалочка - памяти используем мало, а операции с ними очень быстрые. В данном случае битовой строкой мы отмечаем посещенные города: 1 - ага, мы там были, 0 - нет.
+
+Тут же мне понадобились следующие операции: инвертирование определенного бита, генерация чисел с определенным количеством установленных(1) битов, быстрая проверка состояния определенного бита.
+
+Проверить, установлен ли определенный бит очень просто:
+
+{% codeblock lang:c %}
+
+  	int is_nth_bit_set(unsigned long number, int n)
+  	{
+  		return ((number & POWERS_OF_TWO[n]) != 0);
+  	}
+
+{% endcodeblock %}
+
+POWERS_OF_TWO - статический массив unsigned long чисел, содержащий степени двойки, т.е. n-ый элемент это 1 c битовым сдвигом влево на n.
+
+1 << 0 → 1
+
+1 << 1 → 2
+
+...
+
+1 << 30 → 1073741824 
+
+С чем пришлось быть аккуратным, так это с использованием двойки в 31 степени(собирал я все с флажком -m32) - для gcc значение 2147483648LL приходится указывать с explicit LL в конце.
+
+
+Сброс определенного бита с 1 в 0 не намного сложнее:
+
+{% codeblock lang:c %}
+
+    unsigned long unset_nth_bit(unsigned long number, int n)
+    {
+      unsigned long t = number;
+      t &= ~POWERS_OF_TWO[n];
+      return t;
+    }
+
+{% endcodeblock %}
+
+Генерация минимального значения с n-установленными битами:
+
+{% codeblock lang:c %}
+
+    unsigned long create_min_n_bit_set_int(int n)
+    {
+      if (n == 0) return 0;
+      unsigned long template = 1 << (n - 1);
+      int i;
+      for (i=0;i<n;++i)
+      {
+        template |= (1<<i);
+      }
+      return template;
+    }
+
+{% endcodeblock %}
+
+Генерация следующего числа с таким же количеством установленных бит(рецепт из интернета):
+
+{% codeblock lang:c %}
+
+    unsigned long next_with_same_number_of_bits(unsigned long v)
+    {
+        unsigned int t = v | (v - 1);
+        return ((t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1)));
+    }
+
+{% endcodeblock %}
+
+В заключение хочу порекомендовать замечательный ресурс с рецептами для битовых манипуляций: [http://graphics.stanford.edu/~seander/bithacks.html](http://graphics.stanford.edu/~seander/bithacks.html).
