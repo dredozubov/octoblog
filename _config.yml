@@ -101,7 +101,7 @@ disqus_show_comment_count: false
 disqus_language: ru
 
 # Google Analytics
-google_analytics_tracking_id: 
+google_analytics_tracking_id: UA-35687107-1
 
 # Facebook Like
 facebook_like: false
