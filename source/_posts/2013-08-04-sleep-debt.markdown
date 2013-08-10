@@ -7,15 +7,12 @@ categories: lifestyle, interesting
 keywords: сон интересно lifestyle продуктивность
 ---
 
-
-
-<!--![Обложка](../images/sleep-debt/sleep_promiseofsleep.jpg)
--->{% img /images/sleep-debt/sleep_promiseofsleep.jpg %}
-
-
 Однажды я купил на [амазоне](http://www.amazon.com/Promise-Sleep-Medicine-Connection-Happiness/dp/0440509017) книжку под названием "The Promise Of Sleep", профессора Dement'а(отличная фамилия, да) [^1], который посвятил свою жизнь изучению сна и на старости лет оформил это в виде научпопа. Следует сказать что проблемы со сном мне не совсем чужды - иногда я засиживаюсь допоздна и не могу засыпать после этого вовремя какое-то время, так что пролить луч света на хотя бы приблизительную науку процессов, связанных со сном, мне всегда хотелось.
 
 <!--more-->
+
+<!--![Обложка](../images/sleep-debt/sleep_promiseofsleep.jpg)
+-->{% img /images/sleep-debt/sleep_promiseofsleep.jpg %}
 
 [^1]: [Страничка доктора William C. Dement'a M.D.](http://www.stanford.edu/~dement/)
 
