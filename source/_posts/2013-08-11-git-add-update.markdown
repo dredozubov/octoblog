@@ -3,8 +3,11 @@ layout: post
 title: "Git 2.0: add --update"
 date: 2013-08-11 14:54
 comments: true
-categories: git, programming
+categories: git, programming, deprecation
 ---
+Deprecation warning и "новый" синтаксис
+
+<!--more-->
 
 > $ git add -u
 > 
