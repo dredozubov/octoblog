@@ -11,6 +11,8 @@ categories: ruby coffeescript tilt sinatra
 
 Encoding::UndefinedConversionError - "\xD0" from ASCII-8BIT to UTF-8 и далее здоровенный трейсбек. Лечится это вот таким манки-патчем:
     
+{% codeblock lang:ruby %}    
+    
     module Tilt
 	  class CoffeeScriptTemplate
 	    def prepare
@@ -22,5 +24,6 @@ Encoding::UndefinedConversionError - "\xD0" from ASCII-8BIT to UTF-8 и дале
 	  end
 	end
 
+{% endcodeblock %}
 
 [Источник.](http://stackoverflow.com/questions/10828668/padrino-sass-coffee-encodingundefinedconversionerror-from-ascii-8bit-to)

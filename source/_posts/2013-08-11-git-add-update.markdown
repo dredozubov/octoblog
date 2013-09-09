@@ -3,8 +3,12 @@ layout: post
 title: "Git 2.0: add --update"
 date: 2013-08-11 14:54
 comments: true
-categories: git, programming, deprecation
+categories: [git,programming,deprecation]
+keywords: git programming deprecation
+description: "git add --update 2.0"
+
 ---
+
 Deprecation warning и "новый" синтаксис
 
 <!--more-->
@@ -12,10 +16,11 @@ Deprecation warning и "новый" синтаксис
 > $ git add -u
 > 
 > warning: The behavior of 'git add --update (or -u)' with no path argument from a
-subdirectory of the tree will change in Git 2.0 and should not be used anymore.
-To add content for the whole tree, run:
+> subdirectory of the tree will change in Git 2.0 and should not be used anymore.
+> To add content for the whole tree, run:
 >  git add --update :/
->  
->  (or git add -u :/)
-  
-#  **:/**
+>  or
+>  git add -u :/
+>
+
+# ***:/***
