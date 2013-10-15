@@ -27,22 +27,21 @@ delayed_job предлагает несколько стандартных ме�
 
   
     {% codeblock lang:ruby %}
-
-        module RiemannMixin
-          def before(job)
-            job.instance_eval do
-              delay_time = (Time.now - @attributes["created_at"]).to_f
-              @attributes['handler'] =~ /\/object:(\w+)/
-              klass = $1
-              # Monitoring.gauge - мой враппер для riemann-client, добавляющий необходимые тэги и прочее
-              Monitoring.gauge(
-                service: "jobs.startup_time.#{klass.downcase}",
-                metric: delay_time
-              )
-              Rails.logger.info "#{klass} started! Waited for #{delay_time}"
-            end
-          end
-        end
+module RiemannMixin
+  def before(job)
+    job.instance_eval do
+      delay_time = (Time.now - @attributes["created_at"]).to_f
+      @attributes['handler'] =~ /\/object:(\w+)/
+      klass = $1
+      # Monitoring.gauge - мой враппер для riemann-client, добавляющий необходимые тэги и прочее
+      Monitoring.gauge(
+        service: "jobs.startup_time.#{klass.downcase}",
+        metric: delay_time
+      )
+      Rails.logger.info "#{klass} started! Waited for #{delay_time}"
+    end
+  end
+end
     {% endcodeblock %}
 
 В идеале - используем alias или alias_method для того чтобы обернуть существующие коллбеки нашими и ничего не потерять - для моего случая это не нужно.
@@ -51,29 +50,26 @@ delayed_job предлагает несколько стандартных ме�
 * Глобальные плагины для DJ, выполняемые всеми джобами.
 
 {% codeblock lang:ruby %}
+class RiemannPlugin < Delayed::Plugin
+  callbacks do |lifecycle|
+    lifecycle.before(:invoke_job) do |job, *args, &block|
 
-    class RiemannPlugin < Delayed::Plugin
-      callbacks do |lifecycle|
-        lifecycle.before(:invoke_job) do |job, *args, &block|
-
-          job.instance_eval do
-            delay_time = (Time.now - @attributes["created_at"]).to_f
-            @attributes['handler'] =~ /\/object:(\w+)/
-            klass = $1
-            Monitoring.gauge(
-              service: "jobs.startup_time.#{klass.downcase}",
-              metric: delay_time
-            )
-            Rails.logger.info "#{klass} started! Waited for #{delay_time}"
-          end
-
-          # следующий коллбек в цепочке
-          block.call(job, *args) if block.present?
-        end
+      job.instance_eval do
+        delay_time = (Time.now - @attributes["created_at"]).to_f
+        @attributes['handler'] =~ /\/object:(\w+)/
+        klass = $1
+        Monitoring.gauge(
+          service: "jobs.startup_time.#{klass.downcase}",
+          metric: delay_time
+        )
+        Rails.logger.info "#{klass} started! Waited for #{delay_time}"
       end
+
+      # следующий коллбек в цепочке
+      block.call(job, *args) if block.present?
     end
-
-
+  end
+end
 {% endcodeblock %}
 
 т.к. я хочу замерять задержку при выполнении абсолютно всех тасков, мне нравится этот подход. Дополнительные include-ы в таски также не требуются. Впрочем, требуется отдельный инициализатор для rails(если вы юзаете DJ, все шансы что у вас уже он есть).
