@@ -4,6 +4,7 @@ title: "Структуры данных: непересекающиеся мно
 date: 2013-02-07 23:50
 comments: true
 categories: алгоритмы python unionfind структуры данных
+
 ---
 C union-find я столкнулся проходя вторую часть стэнфордских [алгоритмических курсов](https://www.coursera.org/course/algo2) на [coursera](https://www.coursera.org).
 

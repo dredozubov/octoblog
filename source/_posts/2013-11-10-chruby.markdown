@@ -1,0 +1,95 @@
+---
+layout: post
+title: "c rvm на chruby (no bullshit гайд по миграции на OS X)"
+date: 2013-11-10 19:56
+comments: true
+categories: ruby rvm chruby ruby-build osx установка bundler bundle
+
+---
+
+Наконец я перешел с rvm на chruby, давно хотелось чего-нибудь более легковесного. К тому же для некоторых старых проектов я использовал gemset'ы из rvm и мне очень хотелось от них избавиться, с современным bundler'ом они стали абсолютно ненужными.
+
+<!--more-->
+
+
+Итак, процесс миграции. Начнем с установки chruby и ruby-build из homebrew.
+
+{% codeblock lang:bash %}
+brew install chruby ruby-build
+{% endcodeblock %}
+
+Далее, добавляем необходимые примочки в .bash_profile(в моем случае это .zshenv).
+
+
+
+{% codeblock lang:bash %}    
+# chruby stuff
+if [[ -e /usr/local/share/chruby ]]; then
+  # загружаем chruby
+  source '/usr/local/share/chruby/chruby.sh'
+
+  # Автоматически переключаем версии ruby
+  source '/usr/local/share/chruby/auto.sh'
+
+  # Используем по умолчанию версию ruby указанную в ~/.ruby-version
+  # позволяет полностью избегать установленной в системе версии
+  if [[ -f ~/.ruby-version ]]; then
+    chruby $(cat ~/.ruby-version)
+  fi
+fi
+{% endcodeblock %}
+
+В этот же момент можно выкорчевать или закомментировать все связанное с rvm.
+
+Кроме того, нам скорее всего понадобятся сборки ruby с нормальным readline, поставить его можно из brew.
+
+{% codeblock lang:bash %}
+brew install readline
+{% endcodeblock %}
+
+В zshenv/bash_profile добавляем следующее:
+
+{% codeblock lang:bash %}
+# ruby-build
+# узнаем куда установлен readline
+# добавляем --with-readline-dir в переменную окружения RUBY_CONFIGURE_OPTS
+# она будет каждый раз использоваться ruby-build для сборки новой версии ruby
+[[ -s "/usr/local/bin/brew" ]] && export RUBY_CONFIGURE_OPTS=--with-readline-dir=`brew --prefix readline`
+{% endcodeblock %}
+
+Избавляемся от rvm:
+
+{% codeblock lang:bash %}
+rvm implode
+# делаем rm -rf ~/.rvm, если что-то осталось нетронутым
+{% endcodeblock %}
+
+~/.rvm у меня занимал более 4гб, жутко рад тому что его больше нет :)
+
+chruby по дефолту использует директории ~/.rubies и /opt/rubies для поиска нужных версий. Кроме того в MRI есть хардкод в шебангах - при переносе их с места на место не работает например irb и черт знает что еще. Так как разбираться и шебанги править было лень, я решил просто пересобрать пару нужных версий ruby.
+
+{% codeblock lang:bash %}
+ruby-build 1.9.3-p327 ~/.rubies/ruby-1.9.3-p327/
+ruby-build 2.0.0-p247 ~/.rubies/ruby-2.0.0-p247/
+{% endcodeblock %}
+
+Опционально устанавливаем 2.0.0-p247 версией по дефолту
+
+{% codeblock lang:bash %}
+echo ruby-2.0.0-p247 > .ruby-version
+{% endcodeblock %}
+
+Открываем новый терминал, ставим бандлер, вздыхаем полной грудью
+
+{% codeblock lang:bash %}
+gem install bundler
+{% endcodeblock %}
+
+В итоге для автоматического переключения версий ruby используются файлы .ruby-version в корне проектов. От всяческих реликтов в духе .ruby-gemset/.rvmrc/etc можно спокойно избавляться.
+
+Список доступных для сборки ruby-build версий можно посмотреть так:
+
+{% codeblock lang:bash %}
+gem install bundler
+{% endcodeblock %}
+
