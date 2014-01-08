@@ -44,8 +44,8 @@
   <meta name="og:url" content="{{ site.url }}{{ page.url }}"/>
   <meta name="url" content="{{ site.url }}{{ page.url }}">
   {% if page.categories %}
-  <meta name="subject" content="{{ page.categories }}"/>
-  <meta name="category" content="{{ page.categories }}"/>
+  <meta name="subject" content="{{ page.categories | join ',' }}"/>
+  <meta name="category" content="{{ page.categories | join ','}}"/>
   {% endif %}
   <meta name="distribution" content="global">
   {% include custom/head.html %}

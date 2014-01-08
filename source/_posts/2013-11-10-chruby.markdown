@@ -4,6 +4,7 @@ title: "c rvm на chruby (no bullshit гайд по миграции на OS X)
 date: 2013-11-10 19:56
 comments: true
 categories: ruby rvm chruby ruby-build osx установка bundler bundle
+description: "переход с rvm на chruby"
 
 ---
 
